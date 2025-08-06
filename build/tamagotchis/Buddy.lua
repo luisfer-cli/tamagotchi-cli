@@ -20,5 +20,5 @@ return {
   ["strength"] = 9,
   ["race"] = "dog",
   ["age"] = 0,
-  ["hunger"] = 20,
+  ["hunger"] = 85,
 }

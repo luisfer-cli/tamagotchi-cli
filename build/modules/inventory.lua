@@ -25,6 +25,10 @@ function inventory.use_item(pet, item_name, quantity)
         return false, "You need a living pet to use items."
     end
     
+    if pet.is_sleeping then
+        return false, pet.name .. " is sleeping and can't be fed."
+    end
+    
     local inv = inventory.get_inventory()
     
     if not inv[item_name] then

@@ -110,6 +110,10 @@ function tamagotchi.feed(pet, food_effectiveness)
         return false, "Your pet is dead!"
     end
     
+    if pet.is_sleeping then
+        return false, pet.name .. " is sleeping and can't be fed."
+    end
+    
     food_effectiveness = food_effectiveness or 20
     pet.hunger = utils.clamp(pet.hunger - food_effectiveness, 0, pet.max_hunger)
     pet.happiness = utils.clamp(pet.happiness + 5, 0, pet.max_happiness)

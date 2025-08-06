@@ -15,7 +15,7 @@ return {
   ["is_alive"] = true,
   ["max_hunger"] = 100,
   ["last_update"] = 1754463143,
-  ["hunger"] = 0,
+  ["hunger"] = 50,
   ["intelligence"] = 6,
   ["energy"] = 60,
   ["type"] = "normal",
