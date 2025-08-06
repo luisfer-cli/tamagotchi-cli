@@ -42,7 +42,6 @@ local WALLET_FILE = DATA_DIR .. "wallet.lua"
 local INVENTORY_FILE = DATA_DIR .. "inventory.lua"
 local ACTIVE_PET_FILE = DATA_DIR .. "active_pet.txt"
 local PET_LIST_FILE = TAMAGOTCHI_DIR .. "lista.txt"
-local REWARDED_COMMANDS_FILE = DATA_DIR .. "rewarded_commands.txt"
 
 function persistence.init()
     utils.ensure_directory(DATA_DIR)
@@ -54,10 +53,6 @@ function persistence.init()
     
     if not utils.file_exists(INVENTORY_FILE) then
         persistence.save_inventory({})
-    end
-    
-    if not utils.file_exists(REWARDED_COMMANDS_FILE) then
-        persistence.save_rewarded_commands({})
     end
     
     if not utils.file_exists(PET_LIST_FILE) then
@@ -244,34 +239,73 @@ function persistence.backup_save(pet)
     return utils.write_file(backup_file, content)
 end
 
-function persistence.save_rewarded_commands(commands)
-    local lines = {}
-    for command, _ in pairs(commands) do
-        table.insert(lines, command)
-    end
-    local content = table.concat(lines, "\n")
-    return utils.write_file(REWARDED_COMMANDS_FILE, content)
-end
-
-function persistence.load_rewarded_commands()
-    if not utils.file_exists(REWARDED_COMMANDS_FILE) then
-        return {}
+function persistence.get_new_commands_since_last_earn()
+    local history_files = {
+        os.getenv("HOME") .. "/.bash_history",
+        os.getenv("HOME") .. "/.zsh_history"
+    }
+    
+    local data_dir = get_data_dir()
+    local last_earn_file = data_dir .. "last_earn.txt"
+    local last_earn_time = 0
+    
+    -- Get the timestamp of last earn
+    if utils.file_exists(last_earn_file) then
+        local content = utils.read_file(last_earn_file)
+        last_earn_time = tonumber(content) or 0
     end
     
-    local content = utils.read_file(REWARDED_COMMANDS_FILE)
-    if not content then
-        return {}
-    end
+    local new_commands = {}
+    local saved_commands_file = data_dir .. "saved_commands.txt"
+    local saved_commands = {}
     
-    local commands = {}
-    for line in content:gmatch("[^\r\n]+") do
-        local trimmed_line = line:gsub("^%s*(.-)%s*$", "%1")
-        if trimmed_line ~= "" then
-            commands[trimmed_line] = true
+    -- Load previously saved commands to compare
+    if utils.file_exists(saved_commands_file) then
+        local content = utils.read_file(saved_commands_file)
+        if content then
+            for line in content:gmatch("[^\r\n]+") do
+                saved_commands[line] = true
+            end
         end
     end
     
-    return commands
+    -- Read current history
+    local current_commands = {}
+    for _, history_file in ipairs(history_files) do
+        if utils.file_exists(history_file) then
+            local content = utils.read_file(history_file)
+            if content then
+                for line in content:gmatch("[^\r\n]+") do
+                    if line and line ~= "" and not line:match("^%s*$") then
+                        current_commands[line] = true
+                    end
+                end
+            end
+        end
+    end
+    
+    -- Find commands that are in current history but not in saved history
+    for command, _ in pairs(current_commands) do
+        if not saved_commands[command] then
+            table.insert(new_commands, command)
+        end
+    end
+    
+    -- Save current history for next comparison
+    local commands_list = {}
+    for command, _ in pairs(current_commands) do
+        table.insert(commands_list, command)
+    end
+    local content = table.concat(commands_list, "\n")
+    utils.write_file(saved_commands_file, content)
+    
+    return new_commands
+end
+
+function persistence.update_history_check_timestamp()
+    local last_check_file = DATA_DIR .. "last_history_check.txt"
+    local current_time = utils.get_timestamp()
+    return utils.write_file(last_check_file, tostring(current_time))
 end
 
 -- Function to get current data directory (useful for debugging)
