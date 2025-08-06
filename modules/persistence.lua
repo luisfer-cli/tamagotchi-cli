@@ -42,6 +42,7 @@ local WALLET_FILE = DATA_DIR .. "wallet.lua"
 local INVENTORY_FILE = DATA_DIR .. "inventory.lua"
 local ACTIVE_PET_FILE = DATA_DIR .. "active_pet.txt"
 local PET_LIST_FILE = TAMAGOTCHI_DIR .. "lista.txt"
+local REWARDED_COMMANDS_FILE = DATA_DIR .. "rewarded_commands.txt"
 
 function persistence.init()
     utils.ensure_directory(DATA_DIR)
@@ -53,6 +54,10 @@ function persistence.init()
     
     if not utils.file_exists(INVENTORY_FILE) then
         persistence.save_inventory({})
+    end
+    
+    if not utils.file_exists(REWARDED_COMMANDS_FILE) then
+        persistence.save_rewarded_commands({})
     end
     
     if not utils.file_exists(PET_LIST_FILE) then
@@ -237,6 +242,36 @@ function persistence.backup_save(pet)
     
     local content = "return " .. utils.serialize_table(pet)
     return utils.write_file(backup_file, content)
+end
+
+function persistence.save_rewarded_commands(commands)
+    local lines = {}
+    for command, _ in pairs(commands) do
+        table.insert(lines, command)
+    end
+    local content = table.concat(lines, "\n")
+    return utils.write_file(REWARDED_COMMANDS_FILE, content)
+end
+
+function persistence.load_rewarded_commands()
+    if not utils.file_exists(REWARDED_COMMANDS_FILE) then
+        return {}
+    end
+    
+    local content = utils.read_file(REWARDED_COMMANDS_FILE)
+    if not content then
+        return {}
+    end
+    
+    local commands = {}
+    for line in content:gmatch("[^\r\n]+") do
+        local trimmed_line = line:gsub("^%s*(.-)%s*$", "%1")
+        if trimmed_line ~= "" then
+            commands[trimmed_line] = true
+        end
+    end
+    
+    return commands
 end
 
 -- Function to get current data directory (useful for debugging)

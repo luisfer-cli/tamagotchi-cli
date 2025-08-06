@@ -45,13 +45,16 @@ end
 
 function economy.earn_from_commands()
     local commands, last_check = persistence.get_command_history()
+    local rewarded_commands = persistence.load_rewarded_commands()
     local new_commands = 0
     local unique_commands = {}
+    local newly_rewarded = {}
     
     for _, command in ipairs(commands) do
         local base_command = command:match("^(%S+)")
-        if base_command and not unique_commands[base_command] then
+        if base_command and not unique_commands[base_command] and not rewarded_commands[base_command] then
             unique_commands[base_command] = true
+            newly_rewarded[base_command] = true
             new_commands = new_commands + 1
         end
     end
@@ -59,9 +62,16 @@ function economy.earn_from_commands()
     local reward = math.min(new_commands * 2, 50)
     
     if reward > 0 then
+        -- Add newly rewarded commands to the persistent list
+        for command, _ in pairs(newly_rewarded) do
+            rewarded_commands[command] = true
+        end
+        
         local current_coins = persistence.load_wallet()
         persistence.save_wallet(current_coins + reward)
-        return true, string.format("You earned %d coins for using %d unique system commands!", 
+        persistence.save_rewarded_commands(rewarded_commands)
+        
+        return true, string.format("You earned %d coins for using %d new unique system commands!", 
                                   reward, new_commands)
     else
         return false, "No new commands found in history."
