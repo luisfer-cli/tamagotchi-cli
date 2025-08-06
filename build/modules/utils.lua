@@ -9,7 +9,8 @@ utils.colors = {
     cyan = '\27[36m',
     white = '\27[37m',
     reset = '\27[0m',
-    bold = '\27[1m'
+    bold = '\27[1m',
+    dim = '\27[2m'
 }
 
 function utils.file_exists(filename)

@@ -1,254 +1,325 @@
-# Tamagotchi CLI 🐾
+# Tamagotchi CLI
 
-An interactive Tamagotchi-style game completely in the terminal using Lua, with persistence, system monitoring, multiple pets with breeding, types, and an economy system where players can earn coins even by using normal system commands.
+A command-line virtual pet game designed as an interactive tutorial for developers learning terminal usage. This project teaches common CLI patterns, command structures, and best practices through caring for digital pets.
 
-## 📦 Installation
+## Overview
 
-### Option 1: Download Binary (Recommended)
+Tamagotchi CLI combines the nostalgia of virtual pet games with practical command-line learning. Players manage virtual pets while discovering standard CLI conventions, subcommand patterns, argument handling, and terminal workflows used in professional development tools.
+
+## Installation
+
+### Pre-built Binary (Recommended)
+
+Download the statically-linked binary for immediate use:
 
 ```bash
-# Download the binary
+# Download latest release
 wget https://github.com/luisfer-cli/tamagotchi-cli/releases/latest/download/tamagotchi-cli
 
-# Make it executable
+# Make executable
 chmod +x tamagotchi-cli
 
-# Run it from anywhere
-./tamagotchi-cli help
+# Run from current directory
+./tamagotchi-cli --help
 
-# Optional: Install system-wide
+# Install system-wide (optional)
 sudo mv tamagotchi-cli /usr/local/bin/
-tamagotchi-cli help  # Now available globally
 ```
 
-### Option 2: From Source
+### From Source
+
+Requirements: Lua 5.3+ and Linux system for monitoring features
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/tamagotchi-cli.git
+git clone https://github.com/luisfer-cli/tamagotchi-cli.git
 cd tamagotchi-cli
 
-# Build binary
+# Build static binary
 ./build.sh
 
-# Or run with Lua directly
-lua tamagotchi.lua help
+# Or run directly with Lua
+lua tamagotchi.lua --help
 ```
 
-## 🚀 Quick Start
+## Quick Start Tutorial
+
+### 1. Basic CLI Help Patterns
 
 ```bash
-# View help
-./tamagotchi-cli help
+# Standard help flags (learn common conventions)
+tamagotchi-cli --help     # Brief usage overview
+tamagotchi-cli -h         # Short form
+tamagotchi-cli help       # Detailed command reference
 
-# Create your first pet
-./tamagotchi-cli create
-
-# View all your pets
-./tamagotchi-cli list
-
-# View active pet status
-./tamagotchi-cli status
+# Version information
+tamagotchi-cli --version
+tamagotchi-cli -v
 ```
 
-## 📁 Project Structure
+### 2. Create Your First Pet
 
-```
-tamagotchi-cli/
-├── tamagotchi.lua          # Main executable file
-├── build.sh               # Build script for binary
-├── modules/                # Game modules
-│   ├── cli.lua            # Command line interface
-│   ├── tamagotchi.lua     # Pet logic
-│   ├── persistence.lua    # Save system (XDG directories)
-│   ├── economy.lua        # Economic system
-│   ├── inventory.lua      # Inventory management
-│   ├── breeding.lua       # Breeding system
-│   └── utils.lua          # General utilities
-├── tamagotchis/           # Example pet files (for development)
-│   ├── lista.txt          # Pet list
-│   └── *.lua              # Individual pet files
-└── build/                 # Build artifacts
-    └── tamagotchi-cli     # Compiled binary
+```bash
+# Interactive creation process
+tamagotchi-cli create
 ```
 
-**User Data** (automatically created):
+### 3. List and Selection Pattern
 
+```bash
+# View all resources (like 'ls', 'git branch')
+tamagotchi-cli list
+
+# Select active resource (like 'cd', 'git checkout')
+tamagotchi-cli select MyPet
+
+# Check current status (like 'pwd', 'git status')
+tamagotchi-cli status
 ```
-~/.local/share/tamagotchi-cli/
-├── wallet.lua              # Player coins
-├── inventory.lua           # Player inventory
-├── active_pet.txt          # Current active pet
-├── tamagotchis/            # Your pet files
-│   ├── lista.txt           # Pet list
-│   └── *.lua               # Individual pet files
-└── backups/                # Automatic backups
+
+## Command Reference
+
+### Core Commands
+
+| Command | Purpose | CLI Pattern Demonstrated |
+|---------|---------|------------------------|
+| `create` | Create new pet | Resource initialization |
+| `list` | Show all pets | Listing operations |
+| `select <name>` | Set active pet | Context switching |
+| `status` | Show pet condition | Status queries |
+
+### Pet Care
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `feed` | Feed active pet | `tamagotchi-cli feed` |
+| `play` | Play with pet | `tamagotchi-cli play` |
+| `sleep` | Toggle sleep state | `tamagotchi-cli sleep` |
+| `clean` | Clean pet | `tamagotchi-cli clean` |
+| `evolve` | Attempt evolution | `tamagotchi-cli evolve` |
+
+### Economy System
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `shop` | View available items | `tamagotchi-cli shop` |
+| `buy <item>` | Purchase item | `tamagotchi-cli buy apple` |
+| `wallet` | Show coin balance | `tamagotchi-cli wallet` |
+| `work` | Earn coins | `tamagotchi-cli work` |
+| `earn` | Earn from command history | `tamagotchi-cli earn` |
+
+### Inventory Management
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `inventory` | Show owned items | `tamagotchi-cli inventory` |
+| `use <item>` | Use specific item | `tamagotchi-cli use medicine` |
+| `autofeed` | Auto-feed if hungry | `tamagotchi-cli autofeed` |
+| `autoheal` | Auto-heal if needed | `tamagotchi-cli autoheal` |
+
+### Advanced Features
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `breed <f> <m> <child>` | Create offspring | `tamagotchi-cli breed Dad Mom Baby` |
+| `family <name>` | View family tree | `tamagotchi-cli family Baby` |
+| `compatibility <p1> <p2>` | Check breeding compatibility | `tamagotchi-cli compatibility Dad Mom` |
+| `bonus` | Daily coin bonus | `tamagotchi-cli bonus` |
+
+## CLI Learning Concepts
+
+### 1. Command Structure Patterns
+
+```bash
+# Basic command
+tamagotchi-cli status
+
+# Command with argument
+tamagotchi-cli select MyPet
+
+# Command with multiple arguments
+tamagotchi-cli breed Father Mother Child
+
+# Global flags (position independent)
+tamagotchi-cli --version
+tamagotchi-cli -h
 ```
 
-## 🎮 Main Commands
+### 2. State Management
 
-### Basic
+The game demonstrates how CLI tools manage context:
 
-- `create` - Create new tamagotchi
-- `list` - View all tamagotchis
-- `select <name>` - Select tamagotchi to play with
-- `status` - View active tamagotchi status
+- **Active Pet**: Similar to current working directory (`pwd`)
+- **Persistent State**: Like Git repositories or configuration files
+- **List Operations**: View available resources before selection
 
-### Care
+### 3. Error Handling
 
-- `feed` - Feed tamagotchi (automatically uses food from inventory)
-- `play` - Play with tamagotchi (increases happiness, uses energy)
-- `sleep` - Sleep/wake tamagotchi (recovers energy)
-- `clean` - Clean tamagotchi (increases cleanliness and happiness)
-- `evolve` - Attempt evolution (requires age and happiness)
+Professional error messages with helpful suggestions:
 
-### Economy
+```bash
+$ tamagotchi-cli invalid-command
+Error: Unknown command 'invalid-command'
 
-- `work` - Work to earn coins (requires energy)
-- `earn` - Earn coins from system command history
-- `buy <item>` - Buy items from shop
-- `shop` - View shop with prices
-- `wallet` - View coin amount
+CLI Tutorial Tip:
+• Commands must be typed exactly as shown (case-sensitive)
+• Use 'tamagotchi-cli help' to see all available commands
+• Use 'tamagotchi-cli --help' for quick usage overview
 
-### Inventory
+Did you mean one of these?
+  help - Show help documentation
+```
 
-- `inventory` - View items in inventory
-- `use <item>` - Use specific item from inventory
-- `autofeed` - Feed automatically if hungry
-- `autoheal` - Heal automatically if low health
+### 4. Subcommand Patterns
 
-### Breeding
+Learn how professional tools organize functionality:
 
-- `breed <father> <mother> <child>` - Breed two tamagotchis
-- `family <name>` - View family tree
-- `compatibility <pet1> <pet2>` - View breeding compatibility
+- Resource management: `create`, `list`, `select`
+- Operations: `feed`, `play`, `clean`
+- Queries: `status`, `wallet`, `inventory`
+- Utilities: `help`, `version`
 
-### Other
+## Game Mechanics
 
-- `help` - Show complete help
-- `bonus` - Receive daily bonus (once per day)
+### Pet Attributes
 
-## 🐾 Available Races
+- **Health**: Affected by feeding and system monitoring
+- **Happiness**: Increased by playing and cleaning
+- **Energy**: Consumed by activities, restored by sleeping
+- **Hunger**: Increases over time, reduced by feeding
+- **Cleanliness**: Decreases over time, restored by cleaning
 
-- **Dog** - Balanced, good strength and resistance
-- **Cat** - High happiness and intelligence, very fast
-- **Bird** - Lots of energy and speed, very intelligent
-- **Fish** - Basic for beginners
-- **Dragon** - Superior stats, very powerful
+### Evolution System
 
-## 🔮 Elemental Types
-
-- **Normal** (x1.0) - No modifiers
-- **Fire** (x1.2) - 20% more stats
-- **Water** (x1.1) - 10% more stats
-- **Earth** (x1.15) - 15% more stats
-- **Air** (x1.25) - 25% more stats
-
-## 📈 Evolution
-
-Pets evolve through 4 stages:
+Pets progress through life stages based on age and care:
 
 1. **Baby** (0+ hours)
 2. **Child** (7+ hours, 50+ happiness)
 3. **Adult** (30+ hours, 70+ happiness)
 4. **Elder** (100+ hours, 60+ happiness)
 
-## 🛒 Shop System
+### Economic System
 
-| Item         | Price    | Effect                      |
-| ------------ | -------- | --------------------------- |
-| Apple        | 5 coins  | Reduces hunger (15)         |
-| Meat         | 12 coins | Reduces lots of hunger (30) |
-| Medicine     | 25 coins | Restores health (40)        |
-| Toy          | 18 coins | Increases happiness (20)    |
-| Soap         | 8 coins  | Complete cleaning           |
-| Vitamins     | 35 coins | Improves stats (+5)         |
-| Energy Drink | 15 coins | Restores energy (40)        |
+- **Work**: Earn coins using pet energy
+- **Command History**: Gain coins from terminal usage
+- **Daily Bonus**: Once per 24-hour period
+- **Shop**: Purchase food, medicine, toys, and utilities
 
-## 🔧 System Monitoring
+### System Monitoring
 
-The game automatically monitors your system:
+Real-time system integration:
+- High CPU usage affects pet health
+- High memory usage impacts pet happiness
+- Demonstrates CLI tools interacting with system state
 
-- **CPU > 70%** → Reduces health and happiness
-- **RAM > 80%** → Reduces health
+## Data Persistence
 
-## 💰 Earning Coins
+### Storage Location
 
-1. **Work** - `work` command (requires pet energy)
-2. **Command History** - `earn` command (reads bash/zsh history)
-3. **Daily Bonus** - `bonus` command (once per day)
-
-## 👨‍👩‍👧‍👦 Breeding System
-
-- Breed two adult or elder pets
-- Requires minimum happiness and health
-- Costs coins based on parent stages
-- Children inherit stats with possible mutations
-- Small chance of race/type mutation
-
-## 🎯 Tips
-
-1. **Keep your pet happy** - Necessary for evolution
-2. **Buy food regularly** - Pets are always hungry
-3. **Use `autofeed` and `autoheal`** - For automatic care
-4. **Work to earn coins** - But watch energy levels
-5. **Monitor system** - High CPU/RAM affects pets
-6. **Breed pets** - To get better stats
-
-## 🔄 Persistence
-
-- All pets are automatically saved to `~/.local/share/tamagotchi-cli/`
-- Inventory and coins persist between sessions
-- Files stored in readable Lua format
-- Automatic backups for safety
-- Follows XDG Base Directory specification
-- Fallback to current directory if needed
-
-## ⚠️ Requirements
-
-**For Binary Version:**
-
-- Linux x86_64 system
-- Terminal with ANSI color support
-- No additional dependencies required!
-
-**For Source Version:**
-
-- Lua 5.3 or higher
-- Linux system (for `/proc/` monitoring)
-- Terminal with ANSI color support
-
-## 💾 Data Storage
-
-**Linux Standard (XDG):**
-
-- Primary: `~/.local/share/tamagotchi-cli/`
-- Fallback: `./data/` (current directory)
-- Creates folders automatically
-- Follows Linux file system conventions
-
-**Data Structure:**
+Follows XDG Base Directory specification:
 
 ```
 ~/.local/share/tamagotchi-cli/
-├── wallet.lua              # Player coins
-├── inventory.lua           # Player inventory
+├── wallet.lua              # Player currency
+├── inventory.lua           # Owned items
 ├── active_pet.txt          # Current active pet
 ├── last_history_check.txt  # Command history tracking
 ├── last_bonus.txt          # Daily bonus tracking
-├── tamagotchis/            # Pet files
-│   ├── lista.txt           # Pet list
-│   └── *.lua               # Individual pet files
-└── backups/                # Automatic backups
-    └── *_timestamp.lua     # Backup files
+└── tamagotchis/           # Pet data files
+    ├── lista.txt          # Pet registry
+    └── *.lua              # Individual pet files
 ```
 
-**Features:**
+### Backup System
 
-- Portable saves if you want to move them
-- Automatic backups for safety
-- Readable Lua format files
-- Follows XDG Base Directory specification
+- Automatic backup creation
+- Human-readable Lua format
+- Portable between systems
+- Fallback to local directory if XDG unavailable
 
-Enjoy caring for your virtual pets! 🎮✨
+## Professional CLI Patterns Demonstrated
 
+### 1. Help Systems
+- `--help` / `-h` for usage overview
+- `help` command for detailed documentation
+- Context-sensitive error messages
+
+### 2. Version Management
+- `--version` / `-v` flags
+- Semantic versioning display
+- Build and repository information
+
+### 3. State Management
+- Active context concept (current pet)
+- Persistent configuration
+- State validation and recovery
+
+### 4. User Experience
+- Progress indicators
+- Colored output for status
+- Educational tips and suggestions
+- Tab completion friendly commands
+
+### 5. Error Handling
+- Descriptive error messages
+- Suggested corrections
+- Graceful degradation
+- Exit code consistency
+
+## Development
+
+### Building
+
+```bash
+# Create static binary with luastatic
+./build.sh
+
+# Run tests (if available)
+lua test.lua
+
+# Development mode
+lua tamagotchi.lua help
+```
+
+### Project Structure
+
+```
+tamagotchi-cli/
+├── tamagotchi.lua          # Main entry point
+├── build.sh               # Build script
+├── modules/               # Core game logic
+│   ├── cli.lua           # Command interface
+│   ├── tamagotchi.lua    # Pet mechanics
+│   ├── persistence.lua   # Data storage
+│   ├── economy.lua       # Economic system
+│   ├── inventory.lua     # Item management
+│   ├── breeding.lua      # Breeding system
+│   └── utils.lua         # Shared utilities
+└── README.md             # This documentation
+```
+
+## System Requirements
+
+### Binary Version
+- Linux x86_64 system
+- Terminal with ANSI color support
+- No additional dependencies
+
+### Source Version
+- Lua 5.3 or higher
+- Linux system (for `/proc/` monitoring)
+- Standard POSIX utilities
+
+## Contributing
+
+This project serves as both a learning tool and reference implementation for CLI design patterns. Contributions that enhance the educational value while maintaining professional CLI standards are welcome.
+
+## License
+
+Open source - check repository for specific license terms.
+
+## Educational Resources
+
+- [Command Line Interface Guidelines](https://clig.dev/)
+- [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line)
+- [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
